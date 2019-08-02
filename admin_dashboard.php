@@ -1,9 +1,12 @@
 <?php
     ob_start();
     session_start();
-
-    if ($_SESSION["admin_logged_in"] === 0)
-    {
+    if (isset($_SESSION["logged_in_admin"])){
+        if ($_SESSION["logged_in_admin"] === 0)
+        {
+            header("Location: index.php");
+        }
+    }else{
         header("Location: index.php");
     }
 
@@ -28,7 +31,7 @@
         $target_dir = "uploads/";
         $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
         $uploadOk = 1;
-        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
         // Check if image file is a actual image or fake image
         if(isset($_POST["submit"])) 
         {
@@ -107,10 +110,7 @@
           <a class="nav-link active" href="index.php">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="roster.php">Roster</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <a class="nav-link" href="logout.php">logout</a>
         </li>
         <li class="nav-item">
           <a class="nav-link disabled" href="#">Disabled</a>
@@ -180,6 +180,7 @@
                             "<a href='remove.php?id=$row[id]'>".
                                 " <br><div class='btn btn-danger'>remove</div>".
                                 "</a>".
+                                "<a href='change_password.php?id=". $row["id"] ."&telnum=".$row["telnum"]."'>change password</a>".
                                 "</div>";
                     }
                 } else {
@@ -268,7 +269,7 @@
             </div>
             <div class="col-sm-4">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header" id="send_message">
                         SEND MESSAGE
                     </div>
                     <div class="card-body">
@@ -277,11 +278,11 @@
                         action="send_message.php">
                             <div class="form-group">
                                 <label>To</label>
-                                <input name="receiver" class="form-control" type="" name="telnum"><br>
+                                <input name="receiver" class="form-control" type="" ><br>
                             </div>
                             <div class="form-group">
                                 <label>Title</label>
-                                <input name="title" class="form-control" type="" name="telnum"><br>
+                                <input name="title" class="form-control" type="" ><br>
                             </div>
                             <div class="form-group">
                                 <label>Message</label>
@@ -289,6 +290,7 @@
                                     
                                 </textarea>
                             </div>
+                            <input name="redirect" type="hidden" value="admin_dashboard.php#send_message">
                             <button class="btn btn-primary" type="submit">SEND</button>
                         </form>
                     </div>
@@ -332,10 +334,11 @@
                                 while($row = $result->fetch_assoc()) {
                                     echo "<tr>".
                                             "<td>" . $row["sender"] . "</td>";
+                                    $redirect = 'admin_dashboard.php#send_message';
                                     if($row["viewed"] == "no"){
-                                        echo "<td><b><a href='display_message.php?id=". $row["id"] ."'>" . $row["title"] . "</a></b></td>";
+                                        echo "<td><b><a href='display_message.php?id=". $row["id"] ."&redirect=".$redirect."'>" . $row["title"] . "</a></b></td>";
                                     }else{
-                                        echo "<td><a href='display_message.php?id=". $row["id"] ."'>" . $row["title"] . "</td>";
+                                        echo "<td><a href='display_message.php?id=". $row["id"] ."&redirect=".$redirect."'>" . $row["title"] . "</td>";
                                     }
                                     echo "<td>" . $row["date"] . "</td>" .
                                             "<td>" . $row["time"] . "</td>" .

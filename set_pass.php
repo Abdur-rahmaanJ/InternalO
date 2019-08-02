@@ -1,10 +1,9 @@
 <?php
     ob_start();
     session_start(); 
-    $id = $_GET['id'];
-    $redirect = $_GET['redirect'];
+    $id = $_POST['id'];
+    $pswd = $_POST['newpass'];
 
-    $_SESSION["msgtodisplay_id"] = $id;
     $settings = parse_ini_file('settings.ini.php');
 
     // Create connection
@@ -19,10 +18,10 @@
         die("Connection failed: " . $conn->connect_error);
     } 
 
-    $sql = "UPDATE messages SET viewed='yes' WHERE id='$id'";
+    $sql = "UPDATE users SET pswd='$pswd' WHERE id='$id'";
 
     if ($conn->query($sql) === TRUE) {
-        header("Location: ".$redirect);
+        header("Location: admin_dashboard.php");
     } else {
         echo "Error updating record: " . $conn->error;
     }

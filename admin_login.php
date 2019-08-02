@@ -38,7 +38,7 @@
 			if (mysqli_num_rows($results) == 1)
 			{
 				echo "login successful";
-				$_SESSION["admin_logged_in"] = 1; // admin
+				$_SESSION["logged_in_admin"] = 1; // admin
 				$_SESSION["logged_in"] = 1; // user
 				$_SESSION["phone_num"] = $telnum;
 				header('Location: admin_dashboard.php');
@@ -73,7 +73,7 @@
 	<nav class="navbar navbar-expand-sm bg-light navbar-light">
 	  <ul class="navbar-nav">
 		<li class="nav-item active">
-		  <a class="nav-link" href="admin_login.php">Admin</a>
+		  <a class="nav-link" href="index.php">Home</a>
 		</li>
 		<li class="nav-item">
 		  <a class="nav-link" href="#">Link</a>

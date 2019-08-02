@@ -3,6 +3,8 @@
     session_start(); 
     $settings = parse_ini_file('settings.ini.php');
 
+    $redirect = $_POST["redirect"];
+
     $sender = $_SESSION["phone_num"];
     $receiver = $_POST["receiver"];
     $title = $_POST["title"];
@@ -27,7 +29,7 @@
 
     if ($conn->query($sql) === TRUE) {
         echo "New record created successfully";
-        header("Location: admin_dashboard.php");
+        header("Location: ".$redirect);
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;
     }

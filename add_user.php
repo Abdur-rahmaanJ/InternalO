@@ -16,15 +16,29 @@
         die("Connection failed: " . $conn->connect_error);
     } 
 
-    $sql = "INSERT INTO users (telnum, pswd, admin, confirmed)
-    VALUES ('$telnum', '$pswd', 'nonadmin', 'nonconfirmed')";
-
-    if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
+    // Prepare an insert statement
+    $sql = "INSERT INTO users(telnum, pswd, admin, confirmed) VALUES (?, ?, ?, ?)";
+     
+    if($stmt = $conn->prepare($sql)){
+        // Bind variables to the prepared statement as parameters
+        $stmt->bind_param("ssss", $telnump, $pswdp, $adminp, $confirmp);
+        
+        /* Set the parameters values and execute
+        the statement again to insert another row */
+        $telnump = $telnum;
+        $pswdp = $pswd;
+        $adminp = 'nonadmin';
+        $confirmp = 'nonconfirmed';
+        $stmt->execute();
+        
+        echo "Records inserted successfully.";
         header("Location: admin_dashboard.php");
-    } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+    } else{
+        echo "ERROR: Could not prepare query: $sql. " . $mysqli->error;
     }
+     
+    // Close statement
+    $stmt->close();
 
     $conn->close();
 ?>
