@@ -31,6 +31,14 @@ date - varchar 200
 time - varchar 200
 ```
 
+# Main Files
+
+- specify connection settings in ```settings.ini.php```
+- index.php: main page
+- roster.php: user profile page
+- admin_login.php
+- admin_dashboard.php
+
 # Demo
 
 - Login
