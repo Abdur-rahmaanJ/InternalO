@@ -21,12 +21,12 @@
      
     if($stmt = $conn->prepare($sql)){
         // Bind variables to the prepared statement as parameters
-        $stmt->bind_param("ssss", $telnump, $pswdp, $adminp, $confirmp);
+        $stmt->bind_param("ssss", $telnump, md5($pswdp), $adminp, $confirmp);
         
         /* Set the parameters values and execute
         the statement again to insert another row */
         $telnump = $telnum;
-        $pswdp = $pswd;
+        $pswdp = md5($pswd);
         $adminp = 'nonadmin';
         $confirmp = 'nonconfirmed';
         $stmt->execute();
