@@ -33,14 +33,20 @@
 
 			if(isset($_POST['login_user']))     // not empty
 			{
-				$checkQuery = "SELECT * from users WHERE telnum='$telnum' AND pswd='$pswd'"; //AND confirmed='confirmed'
+				$checkQuery = "SELECT * from users WHERE telnum='$telnum'"; //AND confirmed='confirmed'
 				$results = mysqli_query($conn, $checkQuery);
 				if (mysqli_num_rows($results) == 1)
 				{
-					echo "login successful";
-					$_SESSION["logged_in"] = 1;
-					$_SESSION["phone_num"] = $telnum;
-					header('location: roster.php');
+					$user = mysqli_fetch_assoc($results);
+					
+					if (password_verify($pswd, $user["pswd"])) {
+						echo "login successful";
+						$_SESSION["logged_in"] = 1;
+						$_SESSION["phone_num"] = $telnum;
+						header('location: roster.php');
+					} else {
+						echo "login unsuccessful";
+					}
 				}else
 				{
 					echo "login unsuccessful";
@@ -50,6 +56,7 @@
 			{    // if SIGNUP
 				$checkQuery = "SELECT * from users WHERE telnum='$telnum'";
 				$results = mysqli_query($conn, $checkQuery);
+				$pswd = password_hash($_POST["pswd"], PASSWORD_DEFAULT);
 				if (mysqli_num_rows($results) == 1)
 				{
 					echo "registered, please sign in";
