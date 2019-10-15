@@ -29,12 +29,14 @@
 	if ($_SERVER["REQUEST_METHOD"] == "POST") 
 	{
 		$telnum = sanitise($_POST["telnum"]);    // hashing input using below function
-		$pswd = sanitise($_POST["pswd"]);
+		$pswd = sanitise(md5($_POST["pswd"]));
 
 		if(isset($_POST['login_user']))     // not empty
 		{
 			$checkQuery = "SELECT * from users WHERE telnum='$telnum' AND pswd='$pswd' AND admin='admin'"; //AND confirmed='confirmed'
+			
 			$results = mysqli_query($conn, $checkQuery);
+
 			if (mysqli_num_rows($results) == 1)
 			{
 				echo "login successful";

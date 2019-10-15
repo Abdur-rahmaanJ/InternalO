@@ -3,7 +3,7 @@
     $settings = parse_ini_file('settings.ini.php');
 
     $telnum = $_POST["telnum"];
-    $pswd = $_POST["pswd"];
+    $pswd = md5($_POST["pswd"]);
 
     // Create connection
     $conn = new mysqli(

@@ -29,7 +29,7 @@
 		if ($_SERVER["REQUEST_METHOD"] == "POST") 
 		{
 			$telnum = sanitise($_POST["telnum"]);    // hashing input using below function
-			$pswd = sanitise($_POST["pswd"]);
+			$pswd = sanitise(md5($_POST["pswd"]));
 
 			if(isset($_POST['login_user']))     // not empty
 			{
