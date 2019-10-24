@@ -30,20 +30,26 @@
 		{
 			$telnum = sanitise($_POST["telnum"]);    // hashing input using below function
 			$pswd = sanitise($_POST["pswd"]);
-
+			
 			if(isset($_POST['login_user']))     // not empty
 			{
-				$checkQuery = "SELECT * from users WHERE telnum='$telnum' AND pswd='$pswd'"; //AND confirmed='confirmed'
-				$results = mysqli_query($conn, $checkQuery);
-				if (mysqli_num_rows($results) == 1)
+				$checkQuery = "SELECT * from users WHERE telnum='$telnum'"; //AND confirmed='confirmed'
+				$result = mysqli_query($conn, $checkQuery);
+				if (mysqli_num_rows($result) == 1)
 				{
-					echo "login successful";
-					$_SESSION["logged_in"] = 1;
-					$_SESSION["phone_num"] = $telnum;
-					header('location: roster.php');
+					$row=mysqli_fetch_assoc($result);
+					if(password_verify($pswd,$row['pswd'])){
+						echo "login successful";
+						$_SESSION["logged_in"] = 1;
+						$_SESSION["phone_num"] = $telnum;
+						header('location: roster.php');
+					}else
+					{
+						echo "incorrect password, please try again";	
+					}
 				}else
 				{
-					echo "login unsuccessful";
+					echo "You have not registered with us. Please register before trying to login";
 				}
 			}else
 			if(isset($_POST['reg_user']))
@@ -55,7 +61,11 @@
 					echo "registered, please sign in";
 				}else
 				{
-
+					// using crypt blowfish algorithm for creating password hash
+					$options = [
+						'cost' => 10,
+					];
+					$pswd = password_hash($pswd, PASSWORD_BCRYPT, $options);
 					$sql = "INSERT INTO users (telnum, pswd, admin, confirmed) VALUES ('$telnum', '$pswd', 'nonadmin', 'nonconfirmed')";
 					if ($conn->query($sql) === TRUE) 
 					{
