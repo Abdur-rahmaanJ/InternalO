@@ -28,14 +28,19 @@
 		// cheking for sent method
 		if ($_SERVER["REQUEST_METHOD"] == "POST") 
 		{
-			$telnum = sanitise($_POST["telnum"]);    // hashing input using below function
-			$pswd = sanitise($_POST["pswd"]);
+            $telnum = sanitise($_POST["telnum"]);    // hashing input using below function
+            $pswd = $_POST['pswd'];
 
 			if(isset($_POST['login_user']))     // not empty
 			{
-				$checkQuery = "SELECT * from users WHERE telnum='$telnum' AND pswd='$pswd'"; //AND confirmed='confirmed'
-				$results = mysqli_query($conn, $checkQuery);
-				if (mysqli_num_rows($results) == 1)
+                $query = $conn->prepare("SELECT pswd from users WHERE telnum=? AND confirmed='confirmed'");
+                $query->bind_param("i", $telnum);
+                $query->execute();
+
+                $query->bind_result($user_pass);
+                $query->fetch();
+
+				if(password_verify($pswd, $user_pass))
 				{
 					echo "login successful";
 					$_SESSION["logged_in"] = 1;
@@ -48,22 +53,24 @@
 			}else
 			if(isset($_POST['reg_user']))
 			{    // if SIGNUP
-				$checkQuery = "SELECT * from users WHERE telnum='$telnum'";
+				$checkQuery = "SELECT id from users WHERE telnum='$telnum'";
 				$results = mysqli_query($conn, $checkQuery);
 				if (mysqli_num_rows($results) == 1)
 				{
 					echo "registered, please sign in";
 				}else
-				{
+                {
+                    $pswd = password_hash($pswd, PASSWORD_DEFAULT);
+                    $query = $conn->prepare("INSERT INTO users (telnum, pswd, admin, confirmed) VALUES (?, ?, 'nonadmin', 'nonconfirmed')");
 
-					$sql = "INSERT INTO users (telnum, pswd, admin, confirmed) VALUES ('$telnum', '$pswd', 'nonadmin', 'nonconfirmed')";
-					if ($conn->query($sql) === TRUE) 
-					{
-						echo "New record created successfully. Please login";
-					} else 
-					{
-						echo "Error: " . $sql . "<br>" . $conn->error;
-					}
+                    $query->bind_param('is', $telnum, $pswd);
+
+                    if($query->execute()) {
+                        echo "New record created successfully. Please login";
+                    } else {
+                        echo "Error: " . $sql . "<br>" . $conn->error;
+                    }
+
 					$conn->close();
 				}
 			}
