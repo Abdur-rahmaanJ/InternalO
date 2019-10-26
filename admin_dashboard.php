@@ -268,6 +268,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
+                If you want to send message to all users, please enter @all in Receiver field or enter user number to send particular user
                 <div class="card">
                     <div class="card-header" id="send_message">
                         SEND MESSAGE
