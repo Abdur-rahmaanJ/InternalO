@@ -26,7 +26,7 @@
         /* Set the parameters values and execute
         the statement again to insert another row */
         $telnump = $telnum;
-        $pswdp = $pswd;
+        $pswdp = md5($pswd);
         $adminp = 'admin';
         $confirmp = 'confirmed';
         $stmt->execute();

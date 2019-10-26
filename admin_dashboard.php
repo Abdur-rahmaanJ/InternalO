@@ -109,6 +109,9 @@
         <li class="nav-item active">
           <a class="nav-link active" href="index.php">Home</a>
         </li>
+        <li class="nav-item active">
+          <a class="nav-link active" href="admin_broadcast.php">Broadcast</a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" href="logout.php">logout</a>
         </li>

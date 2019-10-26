@@ -33,7 +33,7 @@
 
 		if(isset($_POST['login_user']))     // not empty
 		{
-			$checkQuery = "SELECT * from users WHERE telnum='$telnum' AND pswd='$pswd' AND admin='admin'"; //AND confirmed='confirmed'
+			$checkQuery = "SELECT * from users WHERE telnum='$telnum' AND pswd='md5($pswd)' AND admin='admin'"; //AND confirmed='confirmed'
 			$results = mysqli_query($conn, $checkQuery);
 			if (mysqli_num_rows($results) == 1)
 			{
